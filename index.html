@@ -385,14 +385,16 @@
           <h3>Tus datos</h3>
           <label class="field"><span>Nombre</span><input id="bkName" autocomplete="name" placeholder="Tu nombre"></label>
           <label class="field"><span>Celular</span><input id="bkPhone" type="tel" autocomplete="tel" placeholder="81 1234 5678"></label>
+          <label class="field"><span>Correo (opcional, para recibir recordatorio)</span><input id="bkEmail" type="email" autocomplete="email" placeholder="tucorreo@gmail.com"></label>
           <label class="field"><span>Comentarios (opcional)</span><textarea id="bkNotes" rows="2" placeholder="Ej. traigo foto de referencia"></textarea></label>
           <dl class="summary" id="bkSummary"></dl>
+          <p class="bk-note" id="bkMsg" style="color:#a33"></p>
         </div>
         <div class="bk-step" data-step="5">
           <div class="done">
             <div class="check">✓</div>
-            <h3>¡Listo! Solo falta enviarla</h3>
-            <p style="color:var(--muted);max-width:440px;margin:0 auto 1.6rem">Se abrirá WhatsApp con tu cita ya escrita. Envía el mensaje y el salón te confirmará.</p>
+            <h3 id="bkDoneTitle">¡Listo! Solo falta enviarla</h3>
+            <p id="bkDoneText" style="color:var(--muted);max-width:440px;margin:0 auto 1.6rem">Se abrirá WhatsApp con tu cita ya escrita. Envía el mensaje y el salón te confirmará.</p>
             <a class="btn btn-dark" id="bkWa" target="_blank" rel="noopener">Enviar por WhatsApp</a>
             <p class="bk-note"><button class="link-back" id="bkRestart">Agendar otra cita</button></p>
           </div>
@@ -536,7 +538,12 @@
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
   // ================= SISTEMA DE CITAS =================
-  // EDITAR: sucursales, servicios (con duración en minutos) y horarios
+  // EDITAR: pega aquí la URL de tu App web de Google Apps Script (termina en /exec).
+  // Si la dejas vacía, las citas se envían por WhatsApp como antes.
+  const API_URL = "https://script.google.com/macros/s/AKfycbzrpu3Co2ivuK4bDMcHXN844pCHW-GnqBRhHQaSQcxpVHgnGXEaq3v6R9aJFQ-b2I23rA/exec";
+
+  // EDITAR: sucursales, servicios (con duración en minutos) y horarios.
+  // Los nombres y duraciones deben coincidir con Code.gs.
   const BRANCHES = [
     { id:'brisas', name:'Sucursal Brisas', tag:'For her & him', wa:'528136455444', who:['ella','el'] },
     { id:'herradura', name:'Sucursal La Herradura', tag:'For him', wa:'528140068161', who:['el'] },
@@ -557,11 +564,14 @@
   const HOURS = { 0:null, 1:[10,20], 2:[10,20], 3:[10,20], 4:[10,20], 5:[10,20], 6:[9,18] };
   const SLOT_MIN = 30, DAYS_AHEAD = 14;
 
-  const bk = { step:1, branch:null, service:null, date:null, time:null };
+  const bk = { step:1, branch:null, service:null, date:null, time:null, busy:null, loading:false, error:'' };
   const $ = id => document.getElementById(id);
   const DOW = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
   const fmtDur = m => m>=60 ? (m/60)+' h' : m+' min';
   const fmtDate = d => d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+  const ymd = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  const hhmm = m => String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+  const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
   function opt(label, sub, selected, onClick, disabled){
     const b=document.createElement('button'); b.type='button'; b.className='opt'+(selected?' sel':'');
@@ -569,52 +579,118 @@
   }
   function renderBranches(){
     const c=$('bkBranches'); c.innerHTML='';
-    BRANCHES.forEach(br=>c.append(opt(br.name, br.tag, bk.branch===br, ()=>{ if(bk.branch!==br){bk.service=null;} bk.branch=br; renderBranches(); update(); })));
+    BRANCHES.forEach(br=>c.append(opt(br.name, br.tag, bk.branch===br, ()=>{ if(bk.branch!==br){bk.service=null; bk.busy=null;} bk.branch=br; renderBranches(); update(); })));
   }
   function renderServices(){
     const c=$('bkServices'); c.innerHTML='';
     SERVICES.filter(sv=>bk.branch.who.includes(sv.who)).forEach(sv=>
       c.append(opt(sv.name, 'Aprox. '+fmtDur(sv.min), bk.service===sv, ()=>{bk.service=sv; bk.time=null; renderServices(); update();})));
   }
-  function renderDays(){
-    const c=$('bkDays'); c.innerHTML=''; const today=new Date(); today.setHours(0,0,0,0);
-    for(let i=0;i<DAYS_AHEAD;i++){
-      const d=new Date(today); d.setDate(today.getDate()+i);
-      const closed=!HOURS[d.getDay()] || slotsFor(d).length===0;
-      const sel=bk.date && d.getTime()===bk.date.getTime();
-      const b=opt('<span>'+(i===0?'Hoy':DOW[d.getDay()])+'</span><strong>'+d.getDate()+'</strong>','',sel,()=>{bk.date=d; bk.time=null; renderDays(); renderTimes(); update();},closed);
-      b.classList.add('day'); c.append(b);
+
+  // --- Horas ocupadas (desde Google Calendar) ---
+  async function loadBusy(){
+    if(!API_URL){ bk.busy={capacidad:Infinity, ocupado:{}}; return; }
+    bk.loading=true; bk.error=''; renderDays(); renderTimes();
+    try{
+      const r = await fetch(API_URL+'?accion=ocupado&sucursal='+encodeURIComponent(bk.branch.id)+'&t='+Date.now());
+      const j = await r.json();
+      if(!j.ok) throw new Error(j.error);
+      bk.busy = { capacidad:j.capacidad||1, ocupado:j.ocupado||{} };
+    }catch(e){
+      bk.busy = null; bk.error = 'No pudimos consultar la agenda. Revisa tu conexión e intenta de nuevo.';
     }
+    bk.loading=false;
+  }
+  function isFree(d, m, dur){
+    if(!bk.busy) return false;
+    const evs = (bk.busy.ocupado[ymd(d)]||[]).filter(([s,e]) => s < m+dur && e > m);
+    if(!evs.length) return true;
+    // ¿Cuántas citas se empalman en el momento más lleno?
+    const pts=[]; evs.forEach(([s,e])=>{pts.push([Math.max(s,m),1]); pts.push([Math.min(e,m+dur),-1]);});
+    pts.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+    let cur=0,max=0; pts.forEach(p=>{cur+=p[1]; max=Math.max(max,cur);});
+    return max < bk.busy.capacidad;
   }
   function slotsFor(d){
     const h=HOURS[d.getDay()]; if(!h) return [];
     const out=[], now=new Date(), dur=bk.service?bk.service.min:30;
     for(let m=h[0]*60; m+dur<=h[1]*60; m+=SLOT_MIN){
       const t=new Date(d); t.setHours(0,m,0,0);
-      if(t>now) out.push(String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'));
+      if(t>now && isFree(d,m,dur)) out.push(hhmm(m));
     }
     return out;
   }
+  function renderDays(){
+    const c=$('bkDays'); c.innerHTML=''; const today=new Date(); today.setHours(0,0,0,0);
+    for(let i=0;i<DAYS_AHEAD;i++){
+      const d=new Date(today); d.setDate(today.getDate()+i);
+      const closed=bk.loading || !HOURS[d.getDay()] || slotsFor(d).length===0;
+      const sel=bk.date && d.getTime()===bk.date.getTime();
+      const b=opt('<span>'+(i===0?'Hoy':DOW[d.getDay()])+'</span><strong>'+d.getDate()+'</strong>','',sel,()=>{bk.date=d; bk.time=null; renderDays(); renderTimes(); update();},closed);
+      b.classList.add('day'); c.append(b);
+    }
+  }
   function renderTimes(){
     const c=$('bkTimes'); c.innerHTML='';
+    if(bk.loading){ c.innerHTML='<p class="bk-note">Consultando horarios disponibles…</p>'; return; }
+    if(bk.error){ c.innerHTML='<p class="bk-note" style="color:#a33">'+bk.error+'</p>'; const r=opt('Reintentar','',false,async()=>{await loadBusy(); renderDays(); renderTimes();}); c.append(r); return; }
     if(!bk.date){ c.innerHTML='<p class="bk-note">Primero elige un día.</p>'; return; }
-    slotsFor(bk.date).forEach(t=>c.append(opt(t,'',bk.time===t,()=>{bk.time=t; renderTimes(); update();})));
+    const slots=slotsFor(bk.date);
+    if(!slots.length){ c.innerHTML='<p class="bk-note">Ya no hay horarios ese día. Elige otro.</p>'; return; }
+    slots.forEach(t=>c.append(opt(t,'',bk.time===t,()=>{bk.time=t; renderTimes(); update();})));
   }
   function renderSummary(){
     $('bkSummary').innerHTML=[
       ['Sucursal',bk.branch.name],['Servicio',bk.service.name],
       ['Fecha',fmtDate(bk.date)],['Hora',bk.time]
-    ].map(([k,v])=>'<div><dt>'+k+'</dt><dd>'+v+'</dd></div>').join('');
+    ].map(([k,v])=>'<div><dt>'+k+'</dt><dd>'+esc(v)+'</dd></div>').join('');
   }
   function valid(){
     if(bk.step===1) return !!bk.branch;
     if(bk.step===2) return !!bk.service;
-    if(bk.step===3) return !!(bk.date && bk.time);
-    if(bk.step===4) return $('bkName').value.trim().length>1 && $('bkPhone').value.replace(/\D/g,'').length>=10;
+    if(bk.step===3) return !!(bk.date && bk.time) && !bk.loading;
+    if(bk.step===4){
+      const em=$('bkEmail').value.trim();
+      return !bk.sending && $('bkName').value.trim().length>1 && $('bkPhone').value.replace(/\D/g,'').length>=10 && (!em || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em));
+    }
     return true;
   }
   function update(){ $('bkNext').disabled=!valid(); }
-  function go(n){
+
+  function waLink(){
+    const msg = 'Hola, '+(API_URL?'acabo de agendar':'quiero agendar')+' una cita en Claudia Calvo Salón:\n\n'+
+      '📍 '+bk.branch.name+'\n✂️ '+bk.service.name+'\n📅 '+fmtDate(bk.date)+'\n🕐 '+bk.time+' hrs\n\n'+
+      '👤 '+$('bkName').value.trim()+'\n📱 '+$('bkPhone').value.trim()+
+      ($('bkNotes').value.trim()?'\n📝 '+$('bkNotes').value.trim():'');
+    return 'https://wa.me/'+bk.branch.wa+'?text='+encodeURIComponent(msg);
+  }
+
+  async function submit(){
+    if(!API_URL){ go(5); return; }
+    bk.sending=true; $('bkNext').textContent='Agendando…'; update(); $('bkMsg').textContent='';
+    try{
+      const r = await fetch(API_URL,{ method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify({
+        sucursal:bk.branch.id, servicio:bk.service.name, fecha:ymd(bk.date), hora:bk.time,
+        nombre:$('bkName').value.trim(), telefono:$('bkPhone').value.trim(),
+        correo:$('bkEmail').value.trim(), notas:$('bkNotes').value.trim()
+      })});
+      const j = await r.json();
+      bk.sending=false;
+      if(j.ok){ go(5); return; }
+      if(j.error==='ocupado' || j.error==='horario'){
+        bk.time=null; await loadBusy(); go(3);
+        $('bkTimes').insertAdjacentHTML('afterbegin','<p class="bk-note" style="color:#a33;grid-column:1/-1">Alguien acaba de ganar ese horario 😅 Elige otro, por favor.</p>');
+        return;
+      }
+      $('bkMsg').textContent = j.error==='correo' ? 'Revisa tu correo electrónico.' : 'Revisa que tus datos estén completos.';
+    }catch(e){
+      bk.sending=false;
+      $('bkMsg').innerHTML='No pudimos guardar tu cita. <a href="'+waLink()+'" target="_blank" rel="noopener" style="border-bottom:1px solid">Agéndala por WhatsApp</a>.';
+    }
+    $('bkNext').textContent='Confirmar cita'; update();
+  }
+
+  async function go(n){
     bk.step=n;
     document.querySelectorAll('.bk-step').forEach(e=>e.classList.toggle('on', +e.dataset.step===n));
     document.querySelectorAll('.st').forEach(e=>e.classList.toggle('on', +e.dataset.s<=n));
@@ -622,22 +698,27 @@
     $('bkNav').style.display = n===5 ? 'none':'flex';
     $('bkNext').textContent = n===4 ? 'Confirmar cita' : 'Continuar';
     if(n===2) renderServices();
-    if(n===3){ renderDays(); renderTimes(); }
-    if(n===4) renderSummary();
+    if(n===4) { renderSummary(); $('bkMsg').textContent=''; }
     if(n===5){
-      const msg = 'Hola, quiero agendar una cita en Claudia Calvo Salón:\n\n'+
-        '📍 '+bk.branch.name+'\n✂️ '+bk.service.name+'\n📅 '+fmtDate(bk.date)+'\n🕐 '+bk.time+' hrs\n\n'+
-        '👤 '+$('bkName').value.trim()+'\n📱 '+$('bkPhone').value.trim()+
-        ($('bkNotes').value.trim()?'\n📝 '+$('bkNotes').value.trim():'');
-      $('bkWa').href='https://wa.me/'+bk.branch.wa+'?text='+encodeURIComponent(msg);
+      $('bkWa').href = waLink();
+      if(API_URL){
+        $('bkDoneTitle').textContent='¡Tu cita está agendada!';
+        $('bkDoneText').innerHTML='Te esperamos el <strong>'+esc(fmtDate(bk.date))+'</strong> a las <strong>'+esc(bk.time)+'</strong> en '+esc(bk.branch.name)+'.'+
+          ($('bkEmail').value.trim()?' Te enviamos la invitación a tu correo.':'');
+        $('bkWa').textContent='¿Dudas? Escríbenos por WhatsApp'; $('bkWa').className='btn btn-line';
+      }
     }
     update();
     document.querySelector('.bk').scrollIntoView({behavior:'smooth',block:'start'});
+    if(n===3){
+      renderDays(); renderTimes();
+      if(!bk.busy){ await loadBusy(); renderDays(); renderTimes(); update(); }
+    }
   }
-  $('bkNext').onclick=()=>valid() && go(bk.step+1);
+  $('bkNext').onclick=()=>{ if(!valid()) return; bk.step===4 ? submit() : go(bk.step+1); };
   $('bkBack').onclick=()=>go(bk.step-1);
-  $('bkRestart').onclick=()=>{ Object.assign(bk,{branch:null,service:null,date:null,time:null}); ['bkName','bkPhone','bkNotes'].forEach(i=>$(i).value=''); renderBranches(); go(1); };
-  ['bkName','bkPhone'].forEach(i=>$(i).addEventListener('input',update));
+  $('bkRestart').onclick=()=>{ Object.assign(bk,{branch:null,service:null,date:null,time:null,busy:null}); ['bkName','bkPhone','bkEmail','bkNotes'].forEach(i=>$(i).value=''); renderBranches(); go(1); };
+  ['bkName','bkPhone','bkEmail'].forEach(i=>$(i).addEventListener('input',update));
   renderBranches();
 </script>
 </body>
