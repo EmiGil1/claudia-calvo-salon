@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claudia Calvo Salón | Salón de belleza en Monterrey</title>
+<meta name="description" content="Claudia Calvo Salón: 30 años de experiencia. Cortes, color, antifrizz, peinados, makeup y barbería en Monterrey (Sucursales Brisas y La Herradura).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     DATOS EDITABLES: busca "EDITAR" en este archivo para
+     cambiar teléfono, dirección, horario, precios y redes.
+     ========================================================= */
+  :root{
+    --cream:#f4f0ea;
+    --sand:#e7e0d6;
+    --ink:#0e0e0e;
+    --plum:#141414;
+    --rose:#9a7556;
+    --rose-soft:#cdb59c;
+    --muted:#6e6862;
+    --white:#fbf9f6;
+    --serif:'Cormorant Garamond', Georgia, serif;
+    --sans:'Jost', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);font-weight:300;color:var(--ink);background:var(--cream);line-height:1.7;font-size:17px}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  .wrap{width:min(1180px,90vw);margin:0 auto}
+  .eyebrow{font-size:.78rem;letter-spacing:.32em;text-transform:uppercase;color:var(--rose);font-weight:500}
+  h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.1;color:var(--plum)}
+  h2{font-size:clamp(2.2rem,4.5vw,3.4rem);margin:.4rem 0 1.2rem}
+  .btn{display:inline-flex;align-items:center;gap:.6rem;padding:1rem 2rem;border-radius:999px;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;transition:all .3s ease;cursor:pointer;border:1px solid transparent}
+  .btn-dark{background:var(--plum);color:var(--cream)}
+  .btn-dark:hover{background:var(--ink);transform:translateY(-2px)}
+  .btn-line{border-color:var(--plum);color:var(--plum)}
+  .btn-line:hover{background:var(--plum);color:var(--cream)}
+
+  /* NAV */
+  header{position:fixed;inset:0 0 auto 0;z-index:50;transition:background .3s, box-shadow .3s}
+  header.scrolled{background:rgba(247,241,234,.95);backdrop-filter:blur(8px);box-shadow:0 1px 0 rgba(20,20,20,.1)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:84px}
+  .logo{font-family:var(--sans);font-weight:300;font-size:1.15rem;color:var(--plum);letter-spacing:.32em;line-height:1;text-transform:uppercase;text-align:center}
+  .logo small{display:block;font-family:var(--serif);font-style:italic;font-size:.9rem;letter-spacing:.05em;text-transform:none;color:var(--rose);margin-top:5px}
+  .menu{display:flex;gap:2.2rem;list-style:none;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase}
+  .menu a{position:relative;padding:.3rem 0}
+  .menu a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--rose);transition:width .3s}
+  .menu a:hover::after{width:100%}
+  .nav .btn{padding:.75rem 1.4rem;font-size:.75rem}
+  .burger{display:none;background:none;border:0;cursor:pointer;width:32px;height:24px;position:relative}
+  .burger span{position:absolute;left:0;width:100%;height:1.5px;background:var(--plum);transition:.3s}
+  .burger span:nth-child(1){top:4px}.burger span:nth-child(2){top:11px}.burger span:nth-child(3){top:18px}
+
+  /* HERO */
+  .hero{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:4rem;padding:120px 0 60px}
+  .hero h1{font-size:clamp(3rem,7vw,5.6rem);font-weight:400;margin:1rem 0 1.4rem}
+  .hero h1 em{font-style:italic;color:var(--rose)}
+  .hero p{max-width:460px;color:var(--muted);margin-bottom:2.2rem;font-size:1.08rem}
+  .hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+  .hero-visual{position:relative;height:min(640px,72vh)}
+  .arch{position:absolute;inset:0 8% 0 12%;border-radius:999px 999px 0 0;overflow:hidden;
+        background:
+          radial-gradient(circle at 30% 25%, rgba(255,255,255,.55), transparent 45%),
+          linear-gradient(165deg,#cdb59c 0%,#8a6a4f 40%,#1a1714 100%)}
+  .arch::after{content:"";position:absolute;inset:0;background:
+     repeating-linear-gradient(115deg, rgba(255,255,255,.07) 0 2px, transparent 2px 22px)}
+  .photo-note{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,253,250,.8);z-index:2;white-space:nowrap}
+  .badge{position:absolute;left:0;bottom:12%;background:var(--white);padding:1.3rem 1.6rem;border-radius:18px;box-shadow:0 20px 50px -20px rgba(20,20,20,.35);z-index:3}
+  .badge strong{font-family:var(--serif);font-size:2rem;color:var(--plum);display:block;line-height:1}
+  .badge span{font-size:.78rem;color:var(--muted);letter-spacing:.06em}
+  .circle-txt{position:absolute;right:0;top:6%;width:130px;height:130px;z-index:3;animation:spin 22s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* STRIP */
+  .strip{background:var(--plum);color:var(--cream);overflow:hidden;padding:1.1rem 0}
+  .strip-track{display:flex;gap:3rem;white-space:nowrap;animation:marquee 30s linear infinite;font-family:var(--serif);font-size:1.5rem;font-style:italic}
+  .strip-track span::after{content:"✦";margin-left:3rem;color:var(--rose-soft);font-style:normal;font-size:1rem}
+  @keyframes marquee{to{transform:translateX(-50%)}}
+
+  section{padding:120px 0}
+
+  /* ABOUT */
+  .about{display:grid;grid-template-columns:.9fr 1.1fr;gap:5rem;align-items:center}
+  .about-img{aspect-ratio:4/5;border-radius:24px;position:relative;overflow:hidden;
+     background:linear-gradient(200deg,#e7e0d6,#cdb59c 55%,#8a6a4f)}
+  .about-img .photo-note{color:var(--plum);opacity:.6}
+  .about p{color:var(--muted);margin-bottom:1.2rem}
+  .stats{display:flex;gap:3rem;margin-top:2.4rem;padding-top:2rem;border-top:1px solid rgba(20,20,20,.15)}
+  .stats strong{font-family:var(--serif);font-size:2.6rem;color:var(--plum);font-weight:500;display:block;line-height:1}
+  .stats span{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+  /* SERVICES */
+  .services{background:var(--white)}
+  .sec-head{text-align:center;max-width:620px;margin:0 auto 4rem}
+  .sec-head p{color:var(--muted)}
+  .tabs{display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;margin-bottom:3rem}
+  .tab{background:none;border:1px solid rgba(20,20,20,.2);padding:.65rem 1.4rem;border-radius:999px;font-family:var(--sans);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--plum);cursor:pointer;transition:.25s}
+  .tab.active,.tab:hover{background:var(--plum);color:var(--cream);border-color:var(--plum)}
+  .panel{display:none;grid-template-columns:1fr 1fr;gap:0 4rem;max-width:960px;margin:0 auto}
+  .panel.active{display:grid;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .item{display:flex;align-items:baseline;gap:1rem;padding:1.3rem 0;border-bottom:1px solid rgba(20,20,20,.1)}
+  .item h3{font-size:1.45rem;white-space:nowrap}
+  .item small{display:block;font-family:var(--sans);font-size:.85rem;color:var(--muted);font-weight:300;white-space:normal}
+  .item .dots{flex:1;border-bottom:1px dotted rgba(20,20,20,.3);transform:translateY(-6px)}
+  .item .price{font-family:var(--sans);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rose);white-space:nowrap}
+  .price-note{text-align:center;margin-top:2.5rem;font-size:.85rem;color:var(--muted)}
+
+
+  /* BOOKING */
+  .booking{background:var(--white)}
+  .bk{scroll-margin-top:100px;max-width:900px;margin:0 auto;background:var(--cream);border-radius:28px;padding:3rem;box-shadow:0 30px 60px -40px rgba(20,20,20,.4)}
+  .steps{display:flex;justify-content:space-between;margin-bottom:2.4rem;position:relative}
+  .steps::before{content:"";position:absolute;top:15px;left:6%;right:6%;height:1px;background:rgba(20,20,20,.15)}
+  .st{position:relative;text-align:center;flex:1;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .st b{display:grid;place-items:center;width:31px;height:31px;margin:0 auto .5rem;border-radius:50%;background:var(--cream);border:1px solid rgba(20,20,20,.25);font-weight:400;font-size:.8rem;transition:.3s}
+  .st.on b{background:var(--plum);color:var(--cream);border-color:var(--plum)}
+  .st.on{color:var(--plum)}
+  .bk-step{display:none;animation:fade .35s ease}
+  .bk-step.on{display:block}
+  .bk h3{font-size:1.8rem;margin-bottom:1.4rem}
+  .opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.8rem}
+  .opt{background:var(--white);border:1px solid rgba(20,20,20,.12);border-radius:16px;padding:1.1rem 1.2rem;text-align:left;cursor:pointer;font-family:var(--sans);font-size:.95rem;color:var(--ink);transition:.2s}
+  .opt small{display:block;color:var(--muted);font-size:.78rem;margin-top:.2rem}
+  .opt:hover{border-color:var(--rose)}
+  .opt.sel{background:var(--plum);color:var(--cream);border-color:var(--plum)}
+  .opt.sel small{color:var(--rose-soft)}
+  .opt:disabled{opacity:.35;cursor:not-allowed}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:.5rem;margin-bottom:1.6rem}
+  .day{padding:.8rem .2rem;text-align:center}
+  .day span{display:block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .day strong{font-family:var(--serif);font-size:1.5rem;font-weight:500}
+  .day.sel span{color:var(--rose-soft)}
+  .times{grid-template-columns:repeat(auto-fill,minmax(90px,1fr))}
+  .times .opt{text-align:center;padding:.7rem}
+  .field{display:block;margin-bottom:1rem}
+  .field span{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+  .field input,.field textarea{width:100%;padding:.9rem 1rem;border-radius:12px;border:1px solid rgba(20,20,20,.18);background:var(--white);font-family:var(--sans);font-size:1rem;color:var(--ink)}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--rose)}
+  .summary{background:var(--white);border-radius:18px;padding:1.4rem 1.6rem;margin-bottom:1.4rem}
+  .summary div{display:flex;justify-content:space-between;gap:1rem;padding:.45rem 0;border-bottom:1px solid rgba(20,20,20,.07)}
+  .summary div:last-child{border:0}
+  .summary dt{color:var(--muted);font-size:.85rem}
+  .summary dd{text-align:right}
+  .bk-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2rem;gap:1rem}
+  .bk-nav .btn:disabled{opacity:.35;pointer-events:none}
+  .link-back{background:none;border:0;font-family:var(--sans);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+  .bk-note{font-size:.82rem;color:var(--muted);margin-top:1rem}
+  .done{text-align:center;padding:1rem 0}
+  .done .check{width:70px;height:70px;border-radius:50%;background:var(--plum);color:var(--cream);display:grid;place-items:center;margin:0 auto 1.2rem;font-size:1.8rem}
+  @media (max-width:640px){.bk{padding:1.8rem 1.2rem}.st{font-size:0}.days{grid-template-columns:repeat(4,1fr)}}
+
+  /* GALLERY */
+  .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:240px;gap:1rem}
+  .g{border-radius:18px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:1.2rem;color:var(--white);transition:transform .4s}
+  .g:hover{transform:scale(.98)}
+  .g span{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;position:relative;z-index:1}
+  .g1{grid-column:span 2;grid-row:span 2;background:linear-gradient(150deg,#9a7556,#141414)}
+  .g2{background:linear-gradient(150deg,#cdb59c,#8a6a4f)}
+  .g3{background:linear-gradient(150deg,#3a3430,#0e0e0e)}
+  .g4{grid-column:span 2;background:linear-gradient(120deg,#e7e0d6,#9a7556)}
+  .g4 span{color:var(--plum)}
+
+  /* WHY */
+  .why{background:var(--sand)}
+  .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem}
+  .card{background:var(--white);padding:2.6rem 2.2rem;border-radius:22px;transition:transform .3s, box-shadow .3s}
+  .card:hover{transform:translateY(-6px);box-shadow:0 24px 50px -24px rgba(20,20,20,.35)}
+  .card .num{font-family:var(--serif);font-style:italic;color:var(--rose);font-size:1.4rem}
+  .card h3{font-size:1.7rem;margin:.6rem 0 .8rem}
+  .card p{color:var(--muted);font-size:.98rem}
+
+  /* CTA */
+  .cta{background:var(--plum);color:var(--cream);text-align:center;border-radius:32px;padding:5rem 2rem;margin:0 auto;width:min(1180px,90vw);position:relative;overflow:hidden}
+  .cta::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;border:1px solid rgba(216,182,164,.25);top:-200px;right:-120px}
+  .cta::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(216,182,164,.2);bottom:-160px;left:-80px}
+  .cta h2{color:var(--cream)}
+  .cta p{color:var(--rose-soft);max-width:520px;margin:0 auto 2.2rem}
+  .cta .btn{background:var(--cream);color:var(--plum)}
+  .cta .btn:hover{background:var(--rose-soft)}
+
+  /* CONTACT */
+  .contact{display:grid;grid-template-columns:1fr 1.1fr;gap:4rem}
+  .info-row{display:flex;gap:1.2rem;padding:1.4rem 0;border-bottom:1px solid rgba(20,20,20,.12)}
+  .info-row svg{flex:none;width:22px;height:22px;stroke:var(--rose);margin-top:4px}
+  .info-row h4{font-family:var(--sans);font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rose);font-weight:500}
+  .info-row p{color:var(--ink)}
+  .hours{display:grid;grid-template-columns:auto auto;gap:.1rem 2rem}
+  .map{border-radius:24px;overflow:hidden;min-height:420px;background:var(--sand)}
+  .map iframe{width:100%;height:100%;min-height:420px;border:0;filter:grayscale(.4) sepia(.15)}
+  .socials{display:flex;gap:.8rem;margin-top:2rem}
+  .socials a{width:46px;height:46px;border-radius:50%;border:1px solid rgba(20,20,20,.25);display:grid;place-items:center;transition:.25s}
+  .socials a:hover{background:var(--plum);border-color:var(--plum)}
+  .socials a:hover svg{stroke:var(--cream)}
+  .socials svg{width:18px;height:18px;stroke:var(--plum);fill:none}
+
+  footer{padding:3rem 0;text-align:center;font-size:.82rem;color:var(--muted);border-top:1px solid rgba(20,20,20,.1);margin-top:120px}
+  footer .logo{margin-bottom:1rem}
+
+  /* WhatsApp float */
+  .wa{position:fixed;right:22px;bottom:22px;width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 10px 30px -8px rgba(0,0,0,.35);z-index:60;transition:transform .3s}
+  .wa:hover{transform:scale(1.08)}
+  .wa svg{width:30px;height:30px;fill:#fff}
+
+  .reveal{opacity:0;transform:translateY(30px);transition:opacity .9s ease, transform .9s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* RESPONSIVE */
+  @media (max-width:960px){
+    .menu,.nav .btn{display:none}
+    .burger{display:block}
+    .menu.open{display:flex;flex-direction:column;position:absolute;top:84px;left:0;right:0;background:var(--cream);padding:2rem 5vw;gap:1.4rem;box-shadow:0 20px 30px -20px rgba(0,0,0,.2)}
+    .hero{grid-template-columns:1fr;text-align:center;gap:3rem;padding-top:130px}
+    .hero p{margin-left:auto;margin-right:auto}
+    .hero-actions{justify-content:center}
+    .hero-visual{height:460px}
+    .about,.contact{grid-template-columns:1fr;gap:3rem}
+    .panel{grid-template-columns:1fr}
+    .why-grid{grid-template-columns:1fr}
+    .gallery-grid{grid-template-columns:1fr 1fr;grid-auto-rows:180px}
+    section{padding:80px 0}
+  }
+  @media (max-width:520px){
+    .item h3{white-space:normal;font-size:1.25rem}
+    .stats{gap:1.6rem}
+    .gallery-grid{grid-template-columns:1fr}
+    .g{grid-column:span 1!important;grid-row:span 1!important}
+  }
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="wrap nav">
+    <a href="#" class="logo">Claudia Calvo<small>Salón</small></a>
+    <ul class="menu" id="menu">
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#agendar">Agendar</a></li>
+      <li><a href="#galeria">Galería</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="#agendar" class="btn btn-dark">Agendar cita</a>
+    <button class="burger" id="burger" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <div class="wrap hero">
+    <div class="reveal">
+      <span class="eyebrow">For her &amp; for him · Monterrey</span>
+      <h1>Tu mejor versión <em>empieza aquí</em></h1>
+      <p>30 años de experiencia cuidando tu imagen. Cortes, color, tratamientos, peinados y maquillaje para ella, y barbería para él, en nuestras sucursales Brisas y La Herradura.</p>
+      <div class="hero-actions">
+        <a href="#agendar" class="btn btn-dark">Agenda tu cita</a>
+        <a href="#servicios" class="btn btn-line">Ver servicios</a>
+      </div>
+    </div>
+    <div class="hero-visual reveal">
+      <div class="arch"><span class="photo-note">Aquí va una foto del salón</span></div>
+      <div class="badge"><strong>30</strong><span>años de<br>experiencia</span></div>
+      <svg class="circle-txt" viewBox="0 0 100 100">
+        <defs><path id="c" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs>
+        <circle cx="50" cy="50" r="49" fill="#fffdfa"/>
+        <text font-family="Jost" font-size="8.2" letter-spacing="3" fill="#141414"><textPath href="#c">FOR HER · FOR HIM · 30 AÑOS · </textPath></text>
+        <text x="50" y="57" text-anchor="middle" font-family="Cormorant Garamond" font-style="italic" font-size="20" fill="#9a7556">CC</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="strip" aria-hidden="true">
+    <div class="strip-track">
+      <span>Cortes</span><span>Hair Color</span><span>Antifrizz</span><span>Peinados</span><span>Makeup</span><span>Tratamientos</span><span>Corte caballero</span>
+      <span>Cortes</span><span>Hair Color</span><span>Antifrizz</span><span>Peinados</span><span>Makeup</span><span>Tratamientos</span><span>Corte caballero</span>
+    </div>
+  </div>
+
+  <!-- NOSOTROS -->
+  <section id="nosotros">
+    <div class="wrap about">
+      <div class="about-img reveal"><span class="photo-note">Foto de Claudia</span></div>
+      <div class="reveal">
+        <span class="eyebrow">Nosotros</span>
+        <h2>Belleza con un toque personal</h2>
+        <!-- EDITAR: historia real del salón -->
+        <p>Con 30 años de experiencia, Claudia Calvo Salón se ha ganado la confianza de familias en Monterrey. Escuchamos lo que buscas y te recomendamos lo que mejor va contigo: tu estilo, tu tipo de cabello y tu rutina.</p>
+        <p>Hoy contamos con dos sucursales: <strong>Brisas</strong>, para ella y para él, y <strong>La Herradura</strong>, dedicada al cuidado del caballero.</p>
+        <div class="stats">
+          <div><strong>30</strong><span>Años</span></div>
+          <div><strong>2</strong><span>Sucursales</span></div>
+          <div><strong>♀ ♂</strong><span>Ella y él</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section id="servicios" class="services">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Servicios</span>
+        <h2>Lo que hacemos por ti</h2>
+        <p>Elige una categoría para ver nuestros servicios y precios.</p>
+      </div>
+      <div class="tabs reveal">
+        <button class="tab active" data-tab="ella">Para ella</button>
+        <button class="tab" data-tab="color">Hair Color</button>
+        <button class="tab" data-tab="eventos">Peinado & Makeup</button>
+        <button class="tab" data-tab="el">Para él</button>
+      </div>
+
+      <!-- EDITAR: agrega o quita servicios; cambia "Consultar" por el precio si quieres mostrarlo -->
+      <div class="panel active" id="ella">
+        <div class="item"><h3>Corte de dama<small>Incluye lavado y secado</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Antifrizz<small>Cabello liso, suave y sin frizz</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Tratamientos capilares<small>Hidratación y reparación</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Planchado / Ondas<small>Styling para cualquier día</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+      </div>
+      <div class="panel" id="color">
+        <div class="item"><h3>Tinte completo<small>Color uniforme de raíz a puntas</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Retoque de raíz<small>Mantén tu color al día</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Mechas / Balayage<small>Iluminación a tu medida</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Matiz / Gloss<small>Brillo y corrección de tono</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+      </div>
+      <div class="panel" id="eventos">
+        <div class="item"><h3>Peinado de evento<small>Recogidos, semirecogidos y ondas</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Makeup<small>Natural o glam</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Peinado + maquillaje<small>Bodas, XV años y graduaciones</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Prueba de look<small>Para novias y quinceañeras</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+      </div>
+      <div class="panel" id="el">
+        <div class="item"><h3>Corte de caballero<small>Clásico o moderno</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Fade / Degradado<small>Acabado a navaja</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Barba<small>Perfilado y arreglo</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+        <div class="item"><h3>Corte infantil<small>Para los más pequeños</small></h3><span class="dots"></span><span class="price">Consultar</span></div>
+      </div>
+      <p class="price-note">Escríbenos por WhatsApp para cotizar tu servicio. Los precios varían según largo y volumen del cabello.</p>
+    </div>
+  </section>
+
+
+  <!-- AGENDAR -->
+  <section id="agendar" class="booking">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Agenda en línea</span>
+        <h2>Reserva tu cita</h2>
+        <p>Elige sucursal, servicio, día y hora en menos de un minuto.</p>
+      </div>
+      <div class="bk reveal">
+        <div class="steps">
+          <div class="st on" data-s="1"><b>1</b>Sucursal</div>
+          <div class="st" data-s="2"><b>2</b>Servicio</div>
+          <div class="st" data-s="3"><b>3</b>Fecha y hora</div>
+          <div class="st" data-s="4"><b>4</b>Tus datos</div>
+        </div>
+
+        <div class="bk-step on" data-step="1">
+          <h3>¿A qué sucursal vienes?</h3>
+          <div class="opts" id="bkBranches"></div>
+        </div>
+        <div class="bk-step" data-step="2">
+          <h3>¿Qué servicio quieres?</h3>
+          <div class="opts" id="bkServices"></div>
+        </div>
+        <div class="bk-step" data-step="3">
+          <h3>Elige día y hora</h3>
+          <div class="days" id="bkDays"></div>
+          <div class="opts times" id="bkTimes"></div>
+        </div>
+        <div class="bk-step" data-step="4">
+          <h3>Tus datos</h3>
+          <label class="field"><span>Nombre</span><input id="bkName" autocomplete="name" placeholder="Tu nombre"></label>
+          <label class="field"><span>Celular</span><input id="bkPhone" type="tel" autocomplete="tel" placeholder="81 1234 5678"></label>
+          <label class="field"><span>Comentarios (opcional)</span><textarea id="bkNotes" rows="2" placeholder="Ej. traigo foto de referencia"></textarea></label>
+          <dl class="summary" id="bkSummary"></dl>
+        </div>
+        <div class="bk-step" data-step="5">
+          <div class="done">
+            <div class="check">✓</div>
+            <h3>¡Listo! Solo falta enviarla</h3>
+            <p style="color:var(--muted);max-width:440px;margin:0 auto 1.6rem">Se abrirá WhatsApp con tu cita ya escrita. Envía el mensaje y el salón te confirmará.</p>
+            <a class="btn btn-dark" id="bkWa" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+            <p class="bk-note"><button class="link-back" id="bkRestart">Agendar otra cita</button></p>
+          </div>
+        </div>
+
+        <div class="bk-nav" id="bkNav">
+          <button class="link-back" id="bkBack" style="visibility:hidden">← Atrás</button>
+          <button class="btn btn-dark" id="bkNext" disabled>Continuar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERÍA -->
+  <section id="galeria">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Galería</span>
+        <h2>Nuestro trabajo</h2>
+        <p>Algunos de los looks que hemos creado. Síguenos en <a href="https://www.instagram.com/claudiacalvosalon/" target="_blank" rel="noopener" style="border-bottom:1px solid">@claudiacalvosalon</a> para ver más.</p>
+      </div>
+      <!-- EDITAR: reemplaza cada bloque por una <img> con fotos reales -->
+      <div class="gallery-grid reveal">
+        <div class="g g1"><span>Hair Color</span></div>
+        <div class="g g2"><span>Peinados</span></div>
+        <div class="g g3"><span>Corte caballero</span></div>
+        <div class="g g4"><span>Makeup</span></div>
+        <div class="g g2" style="grid-column:span 2"><span>Antifrizz</span></div>
+        <div class="g g3" style="grid-column:span 2"><span>Cortes</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POR QUÉ -->
+  <section class="why">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <span class="eyebrow">¿Por qué elegirnos?</span>
+        <h2>La experiencia Claudia Calvo</h2>
+      </div>
+      <div class="why-grid">
+        <div class="card reveal"><span class="num">01</span><h3>Atención personalizada</h3><p>Antes de empezar platicamos contigo para entender qué quieres y qué le queda mejor a tu cabello y a tu estilo.</p></div>
+        <div class="card reveal"><span class="num">02</span><h3>Productos profesionales</h3><p>Usamos marcas profesionales que cuidan la salud de tu cabello, piel y uñas mientras logramos el resultado que buscas.</p></div>
+        <div class="card reveal"><span class="num">03</span><h3>30 años de experiencia</h3><p>Tres décadas perfeccionando técnicas y atendiendo a generaciones de clientes en Monterrey.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-bottom:0">
+    <div class="cta reveal">
+      <span class="eyebrow" style="color:var(--rose-soft)">Agenda hoy</span>
+      <h2>¿Lista para tu cambio de look?</h2>
+      <p>Escríbenos por WhatsApp y te ayudamos a encontrar el horario que mejor te acomode en Brisas o La Herradura.</p>
+      <a href="#" class="btn js-wa">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2Z"/></svg>
+        Escríbenos
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto">
+    <div class="wrap contact">
+      <div class="reveal">
+        <span class="eyebrow">Contacto</span>
+        <h2>Visítanos</h2>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <!-- EDITAR: agrega la dirección exacta -->
+          <div><h4>Sucursal Brisas · For her &amp; him</h4><p>Col. Brisas, Monterrey, N.L.</p><p><a href="https://wa.me/528136455444" target="_blank" rel="noopener">WhatsApp 81 3645 5444</a></p></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+          <div><h4>Sucursal La Herradura · For him</h4><p>La Herradura, Monterrey, N.L.</p><p><a href="https://wa.me/528140068161" target="_blank" rel="noopener">WhatsApp 81 4006 8161</a></p></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <!-- EDITAR: horario -->
+          <div><h4>Horario</h4>
+            <div class="hours">
+              <span>Lunes a viernes</span><span>10:00 – 20:00</span>
+              <span>Sábado</span><span>9:00 – 18:00</span>
+              <span>Domingo</span><span>Cerrado</span>
+            </div>
+          </div>
+        </div>
+        <div class="socials">
+          <a href="https://www.instagram.com/claudiacalvosalon/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></svg></a>
+          <a href="https://www.tiktok.com/@claudiacalvosalon" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5M14 3c.5 2.5 2.5 4.5 5 4.5"/></svg></a>
+        </div>
+      </div>
+      <div class="map reveal">
+        <!-- EDITAR (opcional): en Google Maps busca el salón → Compartir → Insertar mapa, y pega aquí el src -->
+        <iframe src="https://www.google.com/maps?q=Claudia+Calvo+Salon+Monterrey&output=embed" loading="lazy" title="Mapa de ubicación"></iframe>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="logo">Claudia Calvo<small>Salón</small></div>
+    <p>© <span id="year"></span> Claudia Calvo Salón · Monterrey, Nuevo León</p>
+  </div>
+</footer>
+
+<a href="#" class="wa js-wa" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.2Z"/></svg>
+</a>
+
+<script>
+  // EDITAR: número de WhatsApp en formato internacional, sin espacios ni "+"
+  const WHATSAPP = "528136455444"; // Sucursal Brisas
+  const MENSAJE = "Hola, me gustaría agendar una cita en Claudia Calvo Salón.";
+
+  document.querySelectorAll('.js-wa').forEach(a => {
+    a.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(MENSAJE)}`;
+    a.target = "_blank"; a.rel = "noopener";
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const header = document.querySelector('header');
+  addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 30));
+
+  const menu = document.getElementById('menu');
+  document.getElementById('burger').onclick = () => menu.classList.toggle('open');
+  menu.querySelectorAll('a').forEach(a => a.onclick = () => menu.classList.remove('open'));
+
+  document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.tab).classList.add('active');
+  });
+
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ================= SISTEMA DE CITAS =================
+  // EDITAR: sucursales, servicios (con duración en minutos) y horarios
+  const BRANCHES = [
+    { id:'brisas', name:'Sucursal Brisas', tag:'For her & him', wa:'528136455444', who:['ella','el'] },
+    { id:'herradura', name:'Sucursal La Herradura', tag:'For him', wa:'528140068161', who:['el'] },
+  ];
+  const SERVICES = [
+    { name:'Corte de dama', min:60, who:'ella' },
+    { name:'Antifrizz', min:180, who:'ella' },
+    { name:'Tratamiento capilar', min:60, who:'ella' },
+    { name:'Tinte / Retoque de raíz', min:120, who:'ella' },
+    { name:'Mechas / Balayage', min:240, who:'ella' },
+    { name:'Peinado', min:60, who:'ella' },
+    { name:'Makeup', min:60, who:'ella' },
+    { name:'Corte de caballero', min:30, who:'el' },
+    { name:'Corte + barba', min:45, who:'el' },
+    { name:'Corte infantil', min:30, who:'el' },
+  ];
+  // Horario por día de la semana (0=domingo). null = cerrado
+  const HOURS = { 0:null, 1:[10,20], 2:[10,20], 3:[10,20], 4:[10,20], 5:[10,20], 6:[9,18] };
+  const SLOT_MIN = 30, DAYS_AHEAD = 14;
+
+  const bk = { step:1, branch:null, service:null, date:null, time:null };
+  const $ = id => document.getElementById(id);
+  const DOW = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const fmtDur = m => m>=60 ? (m/60)+' h' : m+' min';
+  const fmtDate = d => d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+
+  function opt(label, sub, selected, onClick, disabled){
+    const b=document.createElement('button'); b.type='button'; b.className='opt'+(selected?' sel':'');
+    b.innerHTML=label+(sub?'<small>'+sub+'</small>':''); b.disabled=!!disabled; b.onclick=onClick; return b;
+  }
+  function renderBranches(){
+    const c=$('bkBranches'); c.innerHTML='';
+    BRANCHES.forEach(br=>c.append(opt(br.name, br.tag, bk.branch===br, ()=>{ if(bk.branch!==br){bk.service=null;} bk.branch=br; renderBranches(); update(); })));
+  }
+  function renderServices(){
+    const c=$('bkServices'); c.innerHTML='';
+    SERVICES.filter(sv=>bk.branch.who.includes(sv.who)).forEach(sv=>
+      c.append(opt(sv.name, 'Aprox. '+fmtDur(sv.min), bk.service===sv, ()=>{bk.service=sv; bk.time=null; renderServices(); update();})));
+  }
+  function renderDays(){
+    const c=$('bkDays'); c.innerHTML=''; const today=new Date(); today.setHours(0,0,0,0);
+    for(let i=0;i<DAYS_AHEAD;i++){
+      const d=new Date(today); d.setDate(today.getDate()+i);
+      const closed=!HOURS[d.getDay()] || slotsFor(d).length===0;
+      const sel=bk.date && d.getTime()===bk.date.getTime();
+      const b=opt('<span>'+(i===0?'Hoy':DOW[d.getDay()])+'</span><strong>'+d.getDate()+'</strong>','',sel,()=>{bk.date=d; bk.time=null; renderDays(); renderTimes(); update();},closed);
+      b.classList.add('day'); c.append(b);
+    }
+  }
+  function slotsFor(d){
+    const h=HOURS[d.getDay()]; if(!h) return [];
+    const out=[], now=new Date(), dur=bk.service?bk.service.min:30;
+    for(let m=h[0]*60; m+dur<=h[1]*60; m+=SLOT_MIN){
+      const t=new Date(d); t.setHours(0,m,0,0);
+      if(t>now) out.push(String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'));
+    }
+    return out;
+  }
+  function renderTimes(){
+    const c=$('bkTimes'); c.innerHTML='';
+    if(!bk.date){ c.innerHTML='<p class="bk-note">Primero elige un día.</p>'; return; }
+    slotsFor(bk.date).forEach(t=>c.append(opt(t,'',bk.time===t,()=>{bk.time=t; renderTimes(); update();})));
+  }
+  function renderSummary(){
+    $('bkSummary').innerHTML=[
+      ['Sucursal',bk.branch.name],['Servicio',bk.service.name],
+      ['Fecha',fmtDate(bk.date)],['Hora',bk.time]
+    ].map(([k,v])=>'<div><dt>'+k+'</dt><dd>'+v+'</dd></div>').join('');
+  }
+  function valid(){
+    if(bk.step===1) return !!bk.branch;
+    if(bk.step===2) return !!bk.service;
+    if(bk.step===3) return !!(bk.date && bk.time);
+    if(bk.step===4) return $('bkName').value.trim().length>1 && $('bkPhone').value.replace(/\D/g,'').length>=10;
+    return true;
+  }
+  function update(){ $('bkNext').disabled=!valid(); }
+  function go(n){
+    bk.step=n;
+    document.querySelectorAll('.bk-step').forEach(e=>e.classList.toggle('on', +e.dataset.step===n));
+    document.querySelectorAll('.st').forEach(e=>e.classList.toggle('on', +e.dataset.s<=n));
+    $('bkBack').style.visibility = n>1 && n<5 ? 'visible':'hidden';
+    $('bkNav').style.display = n===5 ? 'none':'flex';
+    $('bkNext').textContent = n===4 ? 'Confirmar cita' : 'Continuar';
+    if(n===2) renderServices();
+    if(n===3){ renderDays(); renderTimes(); }
+    if(n===4) renderSummary();
+    if(n===5){
+      const msg = 'Hola, quiero agendar una cita en Claudia Calvo Salón:\n\n'+
+        '📍 '+bk.branch.name+'\n✂️ '+bk.service.name+'\n📅 '+fmtDate(bk.date)+'\n🕐 '+bk.time+' hrs\n\n'+
+        '👤 '+$('bkName').value.trim()+'\n📱 '+$('bkPhone').value.trim()+
+        ($('bkNotes').value.trim()?'\n📝 '+$('bkNotes').value.trim():'');
+      $('bkWa').href='https://wa.me/'+bk.branch.wa+'?text='+encodeURIComponent(msg);
+    }
+    update();
+    document.querySelector('.bk').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  $('bkNext').onclick=()=>valid() && go(bk.step+1);
+  $('bkBack').onclick=()=>go(bk.step-1);
+  $('bkRestart').onclick=()=>{ Object.assign(bk,{branch:null,service:null,date:null,time:null}); ['bkName','bkPhone','bkNotes'].forEach(i=>$(i).value=''); renderBranches(); go(1); };
+  ['bkName','bkPhone'].forEach(i=>$(i).addEventListener('input',update));
+  renderBranches();
+</script>
+</body>
+</html>
